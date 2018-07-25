@@ -32,7 +32,7 @@ class TestComputer(unittest.TestCase):
             matches_removed = self.pick_match(matches_before, difficulty)
             occurrences_realized[matches_removed - 1] += 1.0
 
-        averages_realized = [x / (1.0 * repeats) for x in occurrences_realized]
+        averages_realized = [x / (1.0*repeats) for x in occurrences_realized]
 
         # (1.0 - allowed_deviation)*expected < realized
         # < (1.0 + allowed_deviation)*expected

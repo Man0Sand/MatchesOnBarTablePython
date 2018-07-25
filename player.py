@@ -18,27 +18,23 @@ class HumanPlayer(Player):
     def __init__(self, player_name, match_pile):
         Player.__init__(self, "human", player_name, match_pile)
 
+    def _get_verified_user_input(self, query_text, allowed_input):
+        user_input = ''
+        while user_input not in allowed_input:
+            user_input = self._get_user_input(query_text)
+
+        return user_input
+
     def _get_user_input(self, query_text):
         return input(query_text)
-
-    def _convert_to_int(self, user_input):
-        num = 0
-        if user_input == "1":
-            num = 1
-        elif user_input == "2":
-            num = 2
-        elif user_input == "3":
-            num = 3
-        return num
 
     def _choose_matches(self, matches_left):
         matches_to_remove = 0
 
-        while (matches_left < matches_to_remove or matches_to_remove < 1
-               or 3 < matches_to_remove):
-            user_input = self._get_user_input(
-                "Number of matches to remove (1-3): ")
-            matches_to_remove = self._convert_to_int(user_input)
+        while not matches_to_remove or matches_left < matches_to_remove:
+            user_input = self._get_verified_user_input(
+                "Number of matches to remove (1-3): ", ['1', '2', '3'])
+            matches_to_remove = int(user_input)
 
         return matches_to_remove
 
