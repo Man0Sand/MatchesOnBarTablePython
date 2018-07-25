@@ -1,7 +1,7 @@
 import unittest
 
-from match_drawing import MatchDrawing
-from match import Match
+from match_pile import MatchDrawing
+from match_pile import Match
 
 class TestTriangleDrawing(unittest.TestCase):
     def test_6_matches(self):

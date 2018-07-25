@@ -1,7 +1,7 @@
 import unittest
 
-from match import Match
-from match_grid import MatchGrid
+from match_pile import Match
+from match_pile import MatchGrid
 
 
 class TestTriangleGrid(unittest.TestCase):

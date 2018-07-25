@@ -1,6 +1,6 @@
 import unittest
 
-from match_grid_coordinates import Triangle
+from match_pile import Triangle
 
 
 class TestTriangle(unittest.TestCase):
