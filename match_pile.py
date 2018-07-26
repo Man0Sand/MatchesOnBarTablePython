@@ -1,3 +1,5 @@
+from enum import Enum
+
 class MatchPile:
     def __init__(self, matches_at_start, pile_type):
         self._matches = [Match() for i in range(0, matches_at_start)]
@@ -120,22 +122,16 @@ class Triangle(GridCoordinates):
                     matches_in_rows[row] += 1
                 else:
                     number_of_rows += 1
-                    matches_in_rows[1:] = matches_in_rows
-                    matches_in_rows[0] = 1
+                    matches_in_rows.insert(0, 1)
                     row = number_of_rows - 1
         return matches_in_rows
 
     def _calculate_coordinates(self, matches_in_rows):
-        if not matches_in_rows:
-            return []
-
-        number_of_rows = len(matches_in_rows)
-        matches_in_last_row = matches_in_rows[number_of_rows - 1]
         match_coordinates = []
 
         for row, matches_in_row in enumerate(matches_in_rows):
             for column in range(0, matches_in_row):
-                match_x = matches_in_last_row - matches_in_row + 2*column
+                match_x = matches_in_rows[-1] - matches_in_row + 2*column
                 match_y = row
                 match_coordinates.append((match_x, match_y))
 
@@ -146,5 +142,68 @@ class Triangle(GridCoordinates):
             return 0, 0
 
         height = len(matches_in_rows)
-        width = 2*matches_in_rows[height - 1] - 1
+        width = 2*matches_in_rows[-1] - 1
+        return width, height
+
+
+class Square(GridCoordinates):
+    def calculate(self, number_of_matches):
+        matches_in_rows = self._calculate_matches_in_rows(number_of_matches)
+        width, height = self._get_size(matches_in_rows)
+        return width, height, self._calculate_coordinates(matches_in_rows)
+
+    def _calculate_matches_in_rows(self, number_of_matches):
+
+        class State(Enum):
+            ADD_ROW = 1
+            INCREASE_FIRST_ELEMENT = 2
+            INCREASE_OTHER_ELEMENTS = 3
+
+        row = None
+        next_state = None
+        matches_in_rows = []
+
+        for i in range(number_of_matches):
+            if i == 0:
+                state = State.ADD_ROW
+            elif i == 1:
+                row = 0
+                state = State.INCREASE_OTHER_ELEMENTS
+            else:
+                state = next_state
+
+            if state == State.ADD_ROW:
+                matches_in_rows.insert(0, 1)
+                next_state = State.INCREASE_FIRST_ELEMENT
+            elif state == State.INCREASE_FIRST_ELEMENT:
+                matches_in_rows[0] += 1
+                if matches_in_rows[0] == len(matches_in_rows):
+                    row = len(matches_in_rows) - 1
+                    next_state = State.INCREASE_OTHER_ELEMENTS
+            elif state == State.INCREASE_OTHER_ELEMENTS:
+                matches_in_rows[row] += 1
+                if matches_in_rows[0] == len(matches_in_rows) + 1:
+                    next_state = State.ADD_ROW
+                else:
+                    row -= 1
+
+        return matches_in_rows
+
+    def _calculate_coordinates(self, matches_in_rows):
+        match_coordinates = []
+
+        for row, matches_in_row in enumerate(matches_in_rows):
+            for column in range(0, matches_in_row):
+                match_x = column
+                match_y = row
+                match_coordinates.append((match_x, match_y))
+
+        return match_coordinates
+
+    def _get_size(self, matches_in_rows):
+        if not matches_in_rows:
+            return 0, 0
+
+        height = len(matches_in_rows)
+        width = matches_in_rows[-1]
         return width, height
