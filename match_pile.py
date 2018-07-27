@@ -106,24 +106,32 @@ class Triangle(GridCoordinates):
         return width, height, self._calculate_coordinates(matches_in_rows)
 
     def _calculate_matches_in_rows(self, number_of_matches):
-        if not number_of_matches:
-            return []
+        class State(Enum):
+            ADD_NEW_ROW = 1
+            GROW_FIRST_ROW = 2
+            GROW_OTHER_ROWS = 3
 
-        number_of_rows = 1
-        row = 0
-        matches_in_rows = [0]
+        row = None
+        next_state = None
+        matches_in_rows = []
 
         for i in range(0, number_of_matches):
-            if row != 0:
-                matches_in_rows[row] += 1
-                row -= 1
+            if i == 0:
+                state = State.ADD_NEW_ROW
             else:
-                if matches_in_rows[row] < 2:
-                    matches_in_rows[row] += 1
+                state = next_state
+
+            if state == State.ADD_NEW_ROW:
+                matches_in_rows.insert(0, 1)
+                row = -1
+                next_state = State.GROW_OTHER_ROWS
+            if state == State.GROW_OTHER_ROWS:
+                matches_in_rows[row] += 1
+                if matches_in_rows[0] == 2:
+                    next_state = State.ADD_NEW_ROW
                 else:
-                    number_of_rows += 1
-                    matches_in_rows.insert(0, 1)
-                    row = number_of_rows - 1
+                    row -= 1
+
         return matches_in_rows
 
     def _calculate_coordinates(self, matches_in_rows):
@@ -153,11 +161,10 @@ class Square(GridCoordinates):
         return width, height, self._calculate_coordinates(matches_in_rows)
 
     def _calculate_matches_in_rows(self, number_of_matches):
-
         class State(Enum):
-            ADD_ROW = 1
-            INCREASE_FIRST_ELEMENT = 2
-            INCREASE_OTHER_ELEMENTS = 3
+            ADD_NEW_ROW = 1
+            GROW_FIRST_ROW = 2
+            GROW_OTHER_ROWS = 3
 
         row = None
         next_state = None
@@ -165,25 +172,25 @@ class Square(GridCoordinates):
 
         for i in range(number_of_matches):
             if i == 0:
-                state = State.ADD_ROW
+                state = State.ADD_NEW_ROW
             elif i == 1:
                 row = 0
-                state = State.INCREASE_OTHER_ELEMENTS
+                state = State.GROW_OTHER_ROWS
             else:
                 state = next_state
 
-            if state == State.ADD_ROW:
+            if state == State.ADD_NEW_ROW:
                 matches_in_rows.insert(0, 1)
-                next_state = State.INCREASE_FIRST_ELEMENT
-            elif state == State.INCREASE_FIRST_ELEMENT:
+                next_state = State.GROW_FIRST_ROW
+            elif state == State.GROW_FIRST_ROW:
                 matches_in_rows[0] += 1
                 if matches_in_rows[0] == len(matches_in_rows):
-                    row = len(matches_in_rows) - 1
-                    next_state = State.INCREASE_OTHER_ELEMENTS
-            elif state == State.INCREASE_OTHER_ELEMENTS:
+                    row = -1
+                    next_state = State.GROW_OTHER_ROWS
+            elif state == State.GROW_OTHER_ROWS:
                 matches_in_rows[row] += 1
                 if matches_in_rows[0] == len(matches_in_rows) + 1:
-                    next_state = State.ADD_ROW
+                    next_state = State.ADD_NEW_ROW
                 else:
                     row -= 1
 
