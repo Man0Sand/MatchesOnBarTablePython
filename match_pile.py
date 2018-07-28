@@ -78,6 +78,8 @@ class MatchGrid:
             grid_coordinates = Triangle()
         elif pile_type == "square":
             grid_coordinates = Square()
+        else:
+            grid_coordinates = None
 
         self._width, self._height, coordinates = grid_coordinates.calculate(
             len(matches))
@@ -111,11 +113,33 @@ class GridCoordinates:
     def _calculate_matches_in_rows(self, number_of_matches):
         pass
 
-    def _get_size(self, matches_in_rows):
+    def _get_width(self, matches_in_last_row):
         pass
 
-    def _calculate_coordinates(self, matches_in_rows):
+    def _calculate_x_coordinate(self, column, matches_in_row,
+                                matches_in_last_row):
         pass
+
+    def _get_size(self, matches_in_rows):
+        if not matches_in_rows:
+            return 0, 0
+
+        height = len(matches_in_rows)
+        width = self._get_width(matches_in_rows[-1])
+        return width, height
+
+    def _calculate_coordinates(self, matches_in_rows):
+        match_coordinates = []
+
+        for row, matches_in_row in enumerate(matches_in_rows):
+            for column in range(0, matches_in_row):
+                match_x = self._calculate_x_coordinate(column, matches_in_row,
+                                                       matches_in_rows[-1])
+                match_y = row
+                match_coordinates.append((match_x, match_y))
+
+        return match_coordinates
+
 
 class Triangle(GridCoordinates):
     def _calculate_matches_in_rows(self, number_of_matches):
@@ -142,24 +166,12 @@ class Triangle(GridCoordinates):
 
         return matches_in_rows
 
-    def _calculate_coordinates(self, matches_in_rows):
-        match_coordinates = []
+    def _calculate_x_coordinate(self, column, matches_in_row,
+                                matches_in_last_row):
+        return matches_in_last_row - matches_in_row + 2 * column
 
-        for row, matches_in_row in enumerate(matches_in_rows):
-            for column in range(0, matches_in_row):
-                match_x = matches_in_rows[-1] - matches_in_row + 2*column
-                match_y = row
-                match_coordinates.append((match_x, match_y))
-
-        return match_coordinates
-
-    def _get_size(self, matches_in_rows):
-        if not matches_in_rows:
-            return 0, 0
-
-        height = len(matches_in_rows)
-        width = 2*matches_in_rows[-1] - 1
-        return width, height
+    def _get_width(self, matches_in_last_row):
+        return 2*matches_in_last_row - 1
 
 
 class Square(GridCoordinates):
@@ -194,21 +206,9 @@ class Square(GridCoordinates):
 
         return matches_in_rows
 
-    def _calculate_coordinates(self, matches_in_rows):
-        match_coordinates = []
+    def _calculate_x_coordinate(self, column, matches_in_row,
+                                matches_in_last_row):
+        return column
 
-        for row, matches_in_row in enumerate(matches_in_rows):
-            for column in range(0, matches_in_row):
-                match_x = column
-                match_y = row
-                match_coordinates.append((match_x, match_y))
-
-        return match_coordinates
-
-    def _get_size(self, matches_in_rows):
-        if not matches_in_rows:
-            return 0, 0
-
-        height = len(matches_in_rows)
-        width = matches_in_rows[-1]
-        return width, height
+    def _get_width(self, matches_in_last_row):
+        return matches_in_last_row
