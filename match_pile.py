@@ -98,10 +98,6 @@ class MatchGrid:
 
 
 class GridCoordinates:
-    pass
-
-
-class Triangle(GridCoordinates):
     class State(Enum):
         ADD_NEW_ROW = 1
         GROW_FIRST_ROW = 2
@@ -112,6 +108,16 @@ class Triangle(GridCoordinates):
         width, height = self._get_size(matches_in_rows)
         return width, height, self._calculate_coordinates(matches_in_rows)
 
+    def _calculate_matches_in_rows(self, number_of_matches):
+        pass
+
+    def _get_size(self, matches_in_rows):
+        pass
+
+    def _calculate_coordinates(self, matches_in_rows):
+        pass
+
+class Triangle(GridCoordinates):
     def _calculate_matches_in_rows(self, number_of_matches):
         row = None
         next_state = None
@@ -157,16 +163,6 @@ class Triangle(GridCoordinates):
 
 
 class Square(GridCoordinates):
-    class State(Enum):
-        ADD_NEW_ROW = 1
-        GROW_FIRST_ROW = 2
-        GROW_OTHER_ROWS = 3
-
-    def calculate(self, number_of_matches):
-        matches_in_rows = self._calculate_matches_in_rows(number_of_matches)
-        width, height = self._get_size(matches_in_rows)
-        return width, height, self._calculate_coordinates(matches_in_rows)
-
     def _calculate_matches_in_rows(self, number_of_matches):
         row = None
         next_state = None
