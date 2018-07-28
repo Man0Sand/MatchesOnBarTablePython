@@ -76,6 +76,8 @@ class MatchGrid:
     def __init__(self, pile_type, matches):
         if pile_type == "triangle":
             grid_coordinates = Triangle()
+        elif pile_type == "square":
+            grid_coordinates = Square()
 
         self._width, self._height, coordinates = grid_coordinates.calculate(
             len(matches))
@@ -100,35 +102,35 @@ class GridCoordinates:
 
 
 class Triangle(GridCoordinates):
+    class State(Enum):
+        ADD_NEW_ROW = 1
+        GROW_FIRST_ROW = 2
+        GROW_OTHER_ROWS = 3
+
     def calculate(self, number_of_matches):
         matches_in_rows = self._calculate_matches_in_rows(number_of_matches)
         width, height = self._get_size(matches_in_rows)
         return width, height, self._calculate_coordinates(matches_in_rows)
 
     def _calculate_matches_in_rows(self, number_of_matches):
-        class State(Enum):
-            ADD_NEW_ROW = 1
-            GROW_FIRST_ROW = 2
-            GROW_OTHER_ROWS = 3
-
         row = None
         next_state = None
         matches_in_rows = []
 
         for i in range(0, number_of_matches):
             if i == 0:
-                state = State.ADD_NEW_ROW
+                state = self.State.ADD_NEW_ROW
             else:
                 state = next_state
 
-            if state == State.ADD_NEW_ROW:
+            if state == self.State.ADD_NEW_ROW:
                 matches_in_rows.insert(0, 1)
                 row = -1
-                next_state = State.GROW_OTHER_ROWS
-            if state == State.GROW_OTHER_ROWS:
+                next_state = self.State.GROW_OTHER_ROWS
+            if state == self.State.GROW_OTHER_ROWS:
                 matches_in_rows[row] += 1
                 if matches_in_rows[0] == 2:
-                    next_state = State.ADD_NEW_ROW
+                    next_state = self.State.ADD_NEW_ROW
                 else:
                     row -= 1
 
@@ -155,42 +157,42 @@ class Triangle(GridCoordinates):
 
 
 class Square(GridCoordinates):
+    class State(Enum):
+        ADD_NEW_ROW = 1
+        GROW_FIRST_ROW = 2
+        GROW_OTHER_ROWS = 3
+
     def calculate(self, number_of_matches):
         matches_in_rows = self._calculate_matches_in_rows(number_of_matches)
         width, height = self._get_size(matches_in_rows)
         return width, height, self._calculate_coordinates(matches_in_rows)
 
     def _calculate_matches_in_rows(self, number_of_matches):
-        class State(Enum):
-            ADD_NEW_ROW = 1
-            GROW_FIRST_ROW = 2
-            GROW_OTHER_ROWS = 3
-
         row = None
         next_state = None
         matches_in_rows = []
 
         for i in range(number_of_matches):
             if i == 0:
-                state = State.ADD_NEW_ROW
+                state = self.State.ADD_NEW_ROW
             elif i == 1:
                 row = 0
-                state = State.GROW_OTHER_ROWS
+                state = self.State.GROW_OTHER_ROWS
             else:
                 state = next_state
 
-            if state == State.ADD_NEW_ROW:
+            if state == self.State.ADD_NEW_ROW:
                 matches_in_rows.insert(0, 1)
-                next_state = State.GROW_FIRST_ROW
-            elif state == State.GROW_FIRST_ROW:
+                next_state = self.State.GROW_FIRST_ROW
+            elif state == self.State.GROW_FIRST_ROW:
                 matches_in_rows[0] += 1
                 if matches_in_rows[0] == len(matches_in_rows):
                     row = -1
-                    next_state = State.GROW_OTHER_ROWS
-            elif state == State.GROW_OTHER_ROWS:
+                    next_state = self.State.GROW_OTHER_ROWS
+            elif state == self.State.GROW_OTHER_ROWS:
                 matches_in_rows[row] += 1
                 if matches_in_rows[0] == len(matches_in_rows) + 1:
-                    next_state = State.ADD_NEW_ROW
+                    next_state = self.State.ADD_NEW_ROW
                 else:
                     row -= 1
 
