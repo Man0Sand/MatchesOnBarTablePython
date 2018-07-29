@@ -7,11 +7,27 @@ class Player:
         self._name = player_name
         self._match_pile = match_pile
 
+    @staticmethod
+    def factory(config, match_pile):
+        if config['type'] == 'human':
+            return HumanPlayer(config['name'], match_pile)
+        elif config['type'] == 'computer':
+            return ComputerPlayer(config['name'], config['difficulty'],
+                                  match_pile)
+
+    def play_turn(self):
+        matches_left = self._match_pile.get_remaining_matches()
+        matches_to_remove = self._choose_matches(matches_left)
+        self._match_pile.remove_matches(matches_to_remove)
+
     def get_name(self):
         return self._name
 
     def get_type(self):
         return self._type
+
+    def _choose_matches(self, matches_left):
+        pass
 
 
 class HumanPlayer(Player):
@@ -38,27 +54,18 @@ class HumanPlayer(Player):
 
         return matches_to_remove
 
-    def play_turn(self):
-        matches_left = self._match_pile.get_remaining_matches()
-        matches_to_remove = self._choose_matches(matches_left)
-        self._match_pile.remove_matches(matches_to_remove)
-
 
 class ComputerPlayer(Player):
     def __init__(self, player_name, difficulty, match_pile):
         self._difficulty = difficulty
         Player.__init__(self, "computer", player_name, match_pile)
 
-    def play_turn(self):
-        matches_left = self._match_pile.get_remaining_matches()
-        choose_randomly = self._determine_randomness(self._difficulty)
-        matches_to_remove = self._choose_matches(matches_left, choose_randomly)
-        self._match_pile.remove_matches(matches_to_remove)
-
     def get_difficulty(self):
         return self._difficulty
 
-    def _choose_matches(self, matches_left, choose_randomly):
+    def _choose_matches(self, matches_left):
+        choose_randomly = self._determine_randomness(self._difficulty)
+
         if choose_randomly:
             matches_to_remove = random.randint(1, 3)
             while matches_left < matches_to_remove:

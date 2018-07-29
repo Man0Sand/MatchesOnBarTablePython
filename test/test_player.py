@@ -1,14 +1,15 @@
 import unittest
 from unittest.mock import MagicMock
-from player import ComputerPlayer
-from player import HumanPlayer
+from player import Player
 from match_pile import MatchPile
 
 
 class TestComputer(unittest.TestCase):
     def pick_match(self, matches_before, difficulty):
         match_pile = MatchPile(matches_before, "triangle")
-        player = ComputerPlayer("Machine", difficulty, match_pile)
+        player_config = {'type': 'computer', 'name': 'Machine',
+                         'difficulty': difficulty}
+        player = Player.factory(player_config, match_pile)
         player.play_turn()
         matches_removed = matches_before - match_pile.get_remaining_matches()
         return matches_removed
@@ -46,17 +47,22 @@ class TestComputer(unittest.TestCase):
     def test_constructors(self):
         match_pile = MatchPile(10, "triangle")
 
-        player = ComputerPlayer("Machine", "easy", match_pile)
+        player_config = {'type': 'computer', 'name': 'Machine',
+                         'difficulty': 'easy'}
+
+        player = Player.factory(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("easy", player.get_difficulty())
 
-        player = ComputerPlayer("Machine", "medium", match_pile)
+        player_config['difficulty'] = 'medium'
+        player = Player.factory(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("medium", player.get_difficulty())
 
-        player = ComputerPlayer("Machine", "hard", match_pile)
+        player_config['difficulty'] = 'hard'
+        player = Player.factory(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("hard", player.get_difficulty())
@@ -104,7 +110,8 @@ class TestComputer(unittest.TestCase):
 class TestHuman(unittest.TestCase):
     def verify_match(self, matches_before, matches_removed_expected, mock):
         match_pile = MatchPile(matches_before, "triangle")
-        player = HumanPlayer("Man", match_pile)
+        player_config = {'type': 'human', 'name': 'Man'}
+        player = Player.factory(player_config, match_pile)
         player._get_user_input = mock
         player.play_turn()
         matches_removed = matches_before - match_pile.get_remaining_matches()
