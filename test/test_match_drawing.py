@@ -3,6 +3,7 @@ import unittest
 from match_pile import MatchDrawing
 from match_pile import Match
 
+
 class TestTriangleDrawing(unittest.TestCase):
     def test_6_matches(self):
         matches = [Match() for i in range(6)]

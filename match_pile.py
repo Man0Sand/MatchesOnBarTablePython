@@ -23,7 +23,7 @@ class MatchPile:
             for i in range(matches_to_remove):
                 next(self._active_match).remove()
 
-    def print_matches(self):
+    def draw_matches(self):
         self._output_to_screen(self._drawing.draw())
 
     def _output_to_screen(self, output):

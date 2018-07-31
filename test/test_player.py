@@ -9,7 +9,7 @@ class TestComputer(unittest.TestCase):
         match_pile = MatchPile(matches_before, "triangle")
         player_config = {'type': 'computer', 'name': 'Machine',
                          'difficulty': difficulty}
-        player = Player.factory(player_config, match_pile)
+        player = Player.create(player_config, match_pile)
         player.play_turn()
         matches_removed = matches_before - match_pile.get_remaining_matches()
         return matches_removed
@@ -50,19 +50,19 @@ class TestComputer(unittest.TestCase):
         player_config = {'type': 'computer', 'name': 'Machine',
                          'difficulty': 'easy'}
 
-        player = Player.factory(player_config, match_pile)
+        player = Player.create(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("easy", player.get_difficulty())
 
         player_config['difficulty'] = 'medium'
-        player = Player.factory(player_config, match_pile)
+        player = Player.create(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("medium", player.get_difficulty())
 
         player_config['difficulty'] = 'hard'
-        player = Player.factory(player_config, match_pile)
+        player = Player.create(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("hard", player.get_difficulty())
@@ -111,7 +111,7 @@ class TestHuman(unittest.TestCase):
     def verify_match(self, matches_before, matches_removed_expected, mock):
         match_pile = MatchPile(matches_before, "triangle")
         player_config = {'type': 'human', 'name': 'Man'}
-        player = Player.factory(player_config, match_pile)
+        player = Player.create(player_config, match_pile)
         player._get_user_input = mock
         player.play_turn()
         matches_removed = matches_before - match_pile.get_remaining_matches()

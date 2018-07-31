@@ -8,7 +8,7 @@ class Player:
         self._match_pile = match_pile
 
     @staticmethod
-    def factory(config, match_pile):
+    def create(config, match_pile):
         if config['type'] == 'human':
             return HumanPlayer(config['name'], match_pile)
         elif config['type'] == 'computer':
@@ -82,4 +82,3 @@ class ComputerPlayer(Player):
                 or difficulty == "medium" and random.randint(0, 1)):
             choose_randomly = True
         return choose_randomly
-
