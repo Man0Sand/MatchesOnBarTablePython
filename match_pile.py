@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class MatchPile:
     def __init__(self, matches_at_start, pile_type):
         self._matches = [Match() for i in range(0, matches_at_start)]
@@ -23,7 +24,10 @@ class MatchPile:
                 next(self._active_match).remove()
 
     def print_matches(self):
-        print(self._drawing.draw())
+        self._output_to_screen(self._drawing.draw())
+
+    def _output_to_screen(self, output):
+        print(output)
 
 
 class Match:
