@@ -113,6 +113,7 @@ class TestHuman(unittest.TestCase):
         player_config = {'type': 'human', 'name': 'Man'}
         player = Player.create(player_config, match_pile)
         player._get_user_input = mock
+        player._output_to_screen = MagicMock()
         player.play_turn()
         matches_removed = matches_before - match_pile.get_remaining_matches()
         self.assertEqual(matches_removed_expected, matches_removed)

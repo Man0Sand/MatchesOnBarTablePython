@@ -58,52 +58,52 @@ class TestSquare(unittest.TestCase):
         self._verify_coordinates(1, 1, 1, [(0, 0)])
 
     def test_2_matches(self):
-        self._verify_coordinates(2, 2, 1, [(0, 0), (1, 0)])
+        self._verify_coordinates(2, 3, 1, [(0, 0), (2, 0)])
 
     def test_3_matches(self):
-        self._verify_coordinates(3, 2, 2, [(0, 0),
-                                           (0, 1), (1, 1)])
+        self._verify_coordinates(3, 3, 2, [(0, 0),
+                                           (0, 1), (2, 1)])
 
     def test_4_matches(self):
-        self._verify_coordinates(4, 2, 2, [(0, 0), (1, 0),
-                                           (0, 1), (1, 1)])
+        self._verify_coordinates(4, 3, 2, [(0, 0), (2, 0),
+                                           (0, 1), (2, 1)])
 
     def test_5_matches(self):
-        self._verify_coordinates(5, 3, 2, [(0, 0), (1, 0),
-                                           (0, 1), (1, 1), (2, 1)])
+        self._verify_coordinates(5, 5, 2, [(0, 0), (2, 0),
+                                           (0, 1), (2, 1), (4, 1)])
 
     def test_6_matches(self):
-        self._verify_coordinates(6, 3, 2, [(0, 0), (1, 0), (2, 0),
-                                           (0, 1), (1, 1), (2, 1)])
+        self._verify_coordinates(6, 5, 2, [(0, 0), (2, 0), (4, 0),
+                                           (0, 1), (2, 1), (4, 1)])
 
     def test_7_matches(self):
-        self._verify_coordinates(7, 3, 3, [(0, 0),
-                                           (0, 1), (1, 1), (2, 1),
-                                           (0, 2), (1, 2), (2, 2)])
+        self._verify_coordinates(7, 5, 3, [(0, 0),
+                                           (0, 1), (2, 1), (4, 1),
+                                           (0, 2), (2, 2), (4, 2)])
 
     def test_8_matches(self):
-        self._verify_coordinates(8, 3, 3, [(0, 0), (1, 0),
-                                           (0, 1), (1, 1), (2, 1),
-                                           (0, 2), (1, 2), (2, 2)])
+        self._verify_coordinates(8, 5, 3, [(0, 0), (2, 0),
+                                           (0, 1), (2, 1), (4, 1),
+                                           (0, 2), (2, 2), (4, 2)])
 
     def test_9_matches(self):
-        self._verify_coordinates(9, 3, 3, [(0, 0), (1, 0), (2, 0),
-                                           (0, 1), (1, 1), (2, 1),
-                                           (0, 2), (1, 2), (2, 2)])
+        self._verify_coordinates(9, 5, 3, [(0, 0), (2, 0), (4, 0),
+                                           (0, 1), (2, 1), (4, 1),
+                                           (0, 2), (2, 2), (4, 2)])
 
     def test_14_matches(self):
-        self._verify_coordinates(14, 4, 4, [(0, 0), (1, 0),
-                                            (0, 1), (1, 1), (2, 1), (3, 1),
-                                            (0, 2), (1, 2), (2, 2), (3, 2),
-                                            (0, 3), (1, 3), (2, 3), (3, 3)])
+        self._verify_coordinates(14, 7, 4, [(0, 0), (2, 0),
+                                            (0, 1), (2, 1), (4, 1), (6, 1),
+                                            (0, 2), (2, 2), (4, 2), (6, 2),
+                                            (0, 3), (2, 3), (4, 3), (6, 3)])
 
     def test_23_matches(self):
-        self._verify_coordinates(23, 5, 5,
-                                 [(0, 0), (1, 0), (2, 0),
-                                  (0, 1), (1, 1), (2, 1), (3, 1), (4, 1),
-                                  (0, 2), (1, 2), (2, 2), (3, 2), (4, 2),
-                                  (0, 3), (1, 3), (2, 3), (3, 3), (4, 3),
-                                  (0, 4), (1, 4), (2, 4), (3, 4), (4, 4)])
+        self._verify_coordinates(23, 9, 5,
+                                 [(0, 0), (2, 0), (4, 0),
+                                  (0, 1), (2, 1), (4, 1), (6, 1), (8, 1),
+                                  (0, 2), (2, 2), (4, 2), (6, 2), (8, 2),
+                                  (0, 3), (2, 3), (4, 3), (6, 3), (8, 3),
+                                  (0, 4), (2, 4), (4, 4), (6, 4), (8, 4)])
 
 
 if __name__ == '__main__':

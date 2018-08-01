@@ -44,6 +44,9 @@ class HumanPlayer(Player):
     def _get_user_input(self, query_text):
         return input(query_text)
 
+    def _output_to_screen(self, output):
+        print(output)
+
     def _choose_matches(self, matches_left):
         matches_to_remove = 0
 
@@ -52,6 +55,7 @@ class HumanPlayer(Player):
                 "Number of matches to remove (1-3): ", ['1', '2', '3'])
             matches_to_remove = int(user_input)
 
+        self._output_to_screen('')
         return matches_to_remove
 
 

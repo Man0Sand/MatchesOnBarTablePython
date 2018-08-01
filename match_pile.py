@@ -212,7 +212,7 @@ class Square(GridCoordinates):
 
     def _calculate_x_coordinate(self, column, matches_in_row,
                                 matches_in_last_row):
-        return column
+        return 2*column
 
     def _get_width(self, matches_in_last_row):
-        return matches_in_last_row
+        return 2*matches_in_last_row - 1

@@ -1,6 +1,6 @@
 from game import Game
 
-pile_config = {'number_of_matches': 9, 'type': 'triangle'}
+pile_config = {'number_of_matches': 13, 'type': 'square'}
 
 player_2_config = {'type': 'computer', 'name': 'Computer',
                    'difficulty': 'hard'}
