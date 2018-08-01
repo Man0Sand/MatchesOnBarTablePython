@@ -62,6 +62,7 @@ class TestGame(unittest.TestCase):
 
         human_mock = MagicMock(side_effect=['1', '3', '1'])
         game._players[1]._get_user_input = human_mock
+        game._players[1]._output_to_screen = MagicMock()
 
         self.assertEqual(0, game.get_turn())
         game.play()
