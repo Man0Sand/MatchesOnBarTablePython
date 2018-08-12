@@ -1,15 +1,17 @@
 import unittest
 from unittest.mock import MagicMock
 from player import Player
+from match_pile import MatchPile
 
 
 class TestComputer(unittest.TestCase):
     def pick_match(self, matches_before, difficulty):
+        match_pile = MatchPile(matches_before, "triangle")
         player_config = {'type': 'computer', 'name': 'Machine',
                          'difficulty': difficulty}
-        player = Player.create(player_config)
-        matches_removed = player.play_round(matches_before)
-
+        player = Player.create(player_config, match_pile)
+        player.play_turn()
+        matches_removed = matches_before - match_pile.get_remaining_matches()
         return matches_removed
 
     # A match is picked one time only.
@@ -43,22 +45,24 @@ class TestComputer(unittest.TestCase):
                                    allowed_deviation * averages_expected[i])
 
     def test_constructors(self):
+        match_pile = MatchPile(10, "triangle")
+
         player_config = {'type': 'computer', 'name': 'Machine',
                          'difficulty': 'easy'}
 
-        player = Player.create(player_config)
+        player = Player.create(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("easy", player.get_difficulty())
 
         player_config['difficulty'] = 'medium'
-        player = Player.create(player_config)
+        player = Player.create(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("medium", player.get_difficulty())
 
         player_config['difficulty'] = 'hard'
-        player = Player.create(player_config)
+        player = Player.create(player_config, match_pile)
         self.assertEqual("computer", player.get_type())
         self.assertEqual("Machine", player.get_name())
         self.assertEqual("hard", player.get_difficulty())
@@ -105,11 +109,13 @@ class TestComputer(unittest.TestCase):
 
 class TestHuman(unittest.TestCase):
     def verify_match(self, matches_before, matches_removed_expected, mock):
+        match_pile = MatchPile(matches_before, "triangle")
         player_config = {'type': 'human', 'name': 'Man'}
-        player = Player.create(player_config)
+        player = Player.create(player_config, match_pile)
         player._get_user_input = mock
         player._output_to_screen = MagicMock()
-        matches_removed = player.play_round(matches_before)
+        player.play_turn()
+        matches_removed = matches_before - match_pile.get_remaining_matches()
         self.assertEqual(matches_removed_expected, matches_removed)
 
     def test_normal_match_picking_cases(self):

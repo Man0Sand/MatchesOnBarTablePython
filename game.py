@@ -8,7 +8,8 @@ class Game:
         self._match_pile = MatchPile(pile_config)
         self._players = []
         for player_config in player_configs:
-            self._players.append(Player.create(player_config))
+            self._players.append(Player.create(player_config,
+                                               self._match_pile))
         self._active_player = None
         self._player_selector = CyclingIterator(self._players)
         self._turn = 0
@@ -26,9 +27,7 @@ class Game:
             self._get_user_input("Press <Enter> for "
                                    + self._active_player.get_name()
                                    + "'s turn.\n")
-            matches_left = self._match_pile.get_remaining_matches()
-            matches_to_remove = self._active_player.play_round(matches_left)
-            self._match_pile.remove_matches(matches_to_remove)
+            self._active_player.play_turn()
 
         self._output_to_screen(self._active_player.get_name() + ' loses!\n')
 
