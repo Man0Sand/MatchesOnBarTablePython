@@ -2,23 +2,19 @@ import random
 
 
 class Player:
-    def __init__(self, player_type, player_name, match_pile):
+    def __init__(self, player_type, player_name):
         self._type = player_type
         self._name = player_name
-        self._match_pile = match_pile
 
     @staticmethod
-    def create(config, match_pile):
+    def create(config):
         if config['type'] == 'human':
-            return HumanPlayer(config['name'], match_pile)
+            return HumanPlayer(config['name'])
         elif config['type'] == 'computer':
-            return ComputerPlayer(config['name'], config['difficulty'],
-                                  match_pile)
+            return ComputerPlayer(config['name'], config['difficulty'])
 
-    def play_turn(self):
-        matches_left = self._match_pile.get_remaining_matches()
-        matches_to_remove = self._choose_matches(matches_left)
-        self._match_pile.remove_matches(matches_to_remove)
+    def play_round(self, matches_left):
+        pass
 
     def get_name(self):
         return self._name
@@ -26,13 +22,10 @@ class Player:
     def get_type(self):
         return self._type
 
-    def _choose_matches(self, matches_left):
-        pass
-
 
 class HumanPlayer(Player):
-    def __init__(self, player_name, match_pile):
-        Player.__init__(self, "human", player_name, match_pile)
+    def __init__(self, player_name):
+        Player.__init__(self, "human", player_name)
 
     def _get_verified_user_input(self, query_text, allowed_input):
         user_input = ''
@@ -47,7 +40,7 @@ class HumanPlayer(Player):
     def _output_to_screen(self, output):
         print(output)
 
-    def _choose_matches(self, matches_left):
+    def play_round(self, matches_left):
         matches_to_remove = 0
 
         while not matches_to_remove or matches_left < matches_to_remove:
@@ -60,14 +53,14 @@ class HumanPlayer(Player):
 
 
 class ComputerPlayer(Player):
-    def __init__(self, player_name, difficulty, match_pile):
+    def __init__(self, player_name, difficulty):
         self._difficulty = difficulty
-        Player.__init__(self, "computer", player_name, match_pile)
+        Player.__init__(self, "computer", player_name)
 
     def get_difficulty(self):
         return self._difficulty
 
-    def _choose_matches(self, matches_left):
+    def play_round(self, matches_left):
         choose_randomly = self._determine_randomness(self._difficulty)
 
         if choose_randomly:
