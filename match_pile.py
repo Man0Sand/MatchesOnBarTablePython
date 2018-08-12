@@ -2,10 +2,11 @@ from enum import Enum
 
 
 class MatchPile:
-    def __init__(self, matches_at_start, pile_type):
-        self._matches = [Match() for i in range(0, matches_at_start)]
+    def __init__(self, config):
+        self._matches = [Match() for i in range(0,
+                                                config['number_of_matches'])]
         self._active_match = iter(self._matches)
-        self._drawing = MatchDrawing(pile_type, self._matches)
+        self._drawing = MatchDrawing(config['type'], self._matches)
 
     def get_remaining_matches(self):
         matches_left = 0

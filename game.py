@@ -5,8 +5,7 @@ from cycling_iterator import CyclingIterator
 
 class Game:
     def __init__(self, player_configs, pile_config):
-        self._match_pile = MatchPile(pile_config['number_of_matches'],
-                                     pile_config['type'])
+        self._match_pile = MatchPile(pile_config)
         self._players = []
         for player_config in player_configs:
             self._players.append(Player.create(player_config))

@@ -5,7 +5,8 @@ from match_pile import MatchPile
 
 class TestTrianglePile(unittest.TestCase):
     def test_removing(self):
-        match_pile = MatchPile(6, "triangle")
+        pile_config = {'number_of_matches': 6, 'type': 'triangle'}
+        match_pile = MatchPile(pile_config)
         match_pile._output_to_screen = MagicMock()
 
         self.assertEqual(6, match_pile.get_remaining_matches())
