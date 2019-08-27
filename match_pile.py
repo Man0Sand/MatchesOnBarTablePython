@@ -11,7 +11,7 @@ class MatchPile:
     def get_remaining_matches(self):
         matches_left = 0
         for match in self._matches:
-            if not match.is_removed():
+            if not match.isRemoved():
                 matches_left += 1
 
         return matches_left
@@ -32,14 +32,31 @@ class MatchPile:
 
 
 class Match:
+    class State(Enum):
+        ON_TABLE = 0
+        MARKED_FOR_REMOVAL = 1
+        REMOVED = 2
+
     def __init__(self):
-        self._removed = False
+        self._state = self.State.ON_TABLE
+
+    def toggleRemoval(self):
+        if self._state == self.State.ON_TABLE:
+            self._state = self.State.MARKED_FOR_REMOVAL
+        elif self._state == self.State.MARKED_FOR_REMOVAL:
+            self._state = self.State.ON_TABLE
 
     def remove(self):
-        self._removed = True
+        self._state = self.State.REMOVED
 
-    def is_removed(self):
-        return self._removed
+    def isRemoved(self):
+        return self._state == self.State.REMOVED
+
+    def isMarkedForRemoval(self):
+        return self._state == self.State.MARKED_FOR_REMOVAL
+
+    def isOnTable(self):
+        return self._state != self.State.REMOVED
 
 
 class MatchDrawing:
@@ -67,7 +84,7 @@ class MatchGrid:
         has_match = False
         match = self._grid[(x, y)]
         if isinstance(match, Match):
-            if not match.is_removed():
+            if not match.isRemoved():
                 has_match = True
 
         return has_match
