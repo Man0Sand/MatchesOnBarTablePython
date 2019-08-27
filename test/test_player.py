@@ -6,7 +6,8 @@ from match_pile import MatchPile
 
 class TestComputer(unittest.TestCase):
     def pick_match(self, matches_before, difficulty):
-        match_pile = MatchPile(matches_before, "triangle")
+        match_pile_config = {'type': 'triangle', 'number_of_matches': matches_before}
+        match_pile = MatchPile(match_pile_config)
         player_config = {'type': 'computer', 'name': 'Machine',
                          'difficulty': difficulty}
         player = Player.create(player_config, match_pile)
@@ -45,7 +46,8 @@ class TestComputer(unittest.TestCase):
                                    allowed_deviation * averages_expected[i])
 
     def test_constructors(self):
-        match_pile = MatchPile(10, "triangle")
+        match_pile_config = {'type': 'triangle', 'number_of_matches': 10}
+        match_pile = MatchPile(match_pile_config)
 
         player_config = {'type': 'computer', 'name': 'Machine',
                          'difficulty': 'easy'}
@@ -109,7 +111,8 @@ class TestComputer(unittest.TestCase):
 
 class TestHuman(unittest.TestCase):
     def verify_match(self, matches_before, matches_removed_expected, mock):
-        match_pile = MatchPile(matches_before, "triangle")
+        match_pile_config = {'type': 'triangle', 'number_of_matches': matches_before}
+        match_pile = MatchPile(match_pile_config)
         player_config = {'type': 'human', 'name': 'Man'}
         player = Player.create(player_config, match_pile)
         player._get_user_input = mock

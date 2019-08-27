@@ -16,9 +16,7 @@ class Player:
                                   match_pile)
 
     def play_turn(self):
-        matches_left = self._match_pile.get_remaining_matches()
-        matches_to_remove = self._choose_matches(matches_left)
-        self._match_pile.remove_matches(matches_to_remove)
+        pass
 
     def get_name(self):
         return self._name
@@ -26,13 +24,15 @@ class Player:
     def get_type(self):
         return self._type
 
-    def _choose_matches(self, matches_left):
-        pass
-
 
 class HumanPlayer(Player):
     def __init__(self, player_name, match_pile):
         Player.__init__(self, "human", player_name, match_pile)
+
+    def play_turn(self):
+        matches_left = self._match_pile.get_remaining_matches()
+        matches_to_remove = self._choose_matches(matches_left)
+        self._match_pile.remove_matches(matches_to_remove)
 
     def _get_verified_user_input(self, query_text, allowed_input):
         user_input = ''
@@ -63,6 +63,11 @@ class ComputerPlayer(Player):
     def __init__(self, player_name, difficulty, match_pile):
         self._difficulty = difficulty
         Player.__init__(self, "computer", player_name, match_pile)
+
+    def play_turn(self):
+        matches_left = self._match_pile.get_remaining_matches()
+        matches_to_remove = self._choose_matches(matches_left)
+        self._match_pile.remove_matches(matches_to_remove)
 
     def get_difficulty(self):
         return self._difficulty
