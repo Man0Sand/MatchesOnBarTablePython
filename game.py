@@ -25,8 +25,8 @@ class Game:
             self._turn += 1
             self._active_player = self._player_selector.advance()
             self._get_user_input("Press <Enter> for "
-                                   + self._active_player.get_name()
-                                   + "'s turn.\n")
+                                 + self._active_player.get_name()
+                                 + "'s turn.\n")
             self._active_player.play_turn()
 
         self._output_to_screen(self._active_player.get_name() + ' loses!\n')

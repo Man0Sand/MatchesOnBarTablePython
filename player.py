@@ -1,7 +1,11 @@
 import random
 
+from match_pile import MatchPile
+
 
 class Player:
+    _match_pile: MatchPile
+
     def __init__(self, player_type, player_name, match_pile):
         self._type = player_type
         self._name = player_name
@@ -30,9 +34,15 @@ class HumanPlayer(Player):
         Player.__init__(self, "human", player_name, match_pile)
 
     def play_turn(self):
-        matches_left = self._match_pile.get_remaining_matches()
-        matches_to_remove = self._choose_matches(matches_left)
-        self._match_pile.remove_matches(matches_to_remove)
+        while True:
+            userInput = self._get_verified_user_input('[1] remove match [e] end turn: ', ['1', 'e'])
+            if userInput == '1':
+                self._match_pile.toggleMatchesToRemove()
+                self._match_pile.draw_matches()
+            elif userInput == 'e':
+                if self._match_pile.matchesMarkedForRemoval():
+                    self._match_pile.removeMatches()
+                    break
 
     def _get_verified_user_input(self, query_text, allowed_input):
         user_input = ''
@@ -46,17 +56,6 @@ class HumanPlayer(Player):
 
     def _output_to_screen(self, output):
         print(output)
-
-    def _choose_matches(self, matches_left):
-        matches_to_remove = 0
-
-        while not matches_to_remove or matches_left < matches_to_remove:
-            user_input = self._get_verified_user_input(
-                "Number of matches to remove (1-3): ", ['1', '2', '3'])
-            matches_to_remove = int(user_input)
-
-        self._output_to_screen('')
-        return matches_to_remove
 
 
 class ComputerPlayer(Player):

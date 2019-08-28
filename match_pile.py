@@ -5,7 +5,6 @@ class MatchPile:
     def __init__(self, config):
         self._matches = [Match() for i in range(0,
                                                 config['number_of_matches'])]
-        self._active_match = iter(self._matches)
         self._drawing = MatchDrawing(config['type'], self._matches)
 
     def get_remaining_matches(self):
@@ -21,14 +20,53 @@ class MatchPile:
             return
 
         if matches_to_remove <= self.get_remaining_matches():
-            for i in range(matches_to_remove):
-                next(self._active_match).remove()
+            matchesRemoved = 0
+            for match in self._matches:
+                if match.isOnTable():
+                    match.remove()
+                    matchesRemoved += 1
+                    if matchesRemoved == matches_to_remove:
+                        break
 
     def draw_matches(self):
         self._output_to_screen(self._drawing.draw())
 
     def _output_to_screen(self, output):
         print(output)
+
+    def toggleMatchesToRemove(self):
+        if self._numberOfMarkedMatches() == 3 or self._numberOfMarkedMatches() == self.get_remaining_matches():
+            self._clearMarkedMatches()
+        else:
+            self._markMatchForRemoval()
+
+    def _clearMarkedMatches(self):
+        for match in self._matches:
+            if match.isMarkedForRemoval():
+                match.toggleRemoval()
+
+    def _markMatchForRemoval(self):
+        for match in self._matches:
+            if match.isOnTable() and not match.isMarkedForRemoval():
+                match.toggleRemoval()
+                break
+
+    def _numberOfMarkedMatches(self):
+        numberOfMarkedMatches = 0
+        for match in self._matches:
+            if match.isMarkedForRemoval():
+                numberOfMarkedMatches += 1
+        return numberOfMarkedMatches
+
+    def matchesMarkedForRemoval(self):
+        if self._numberOfMarkedMatches() > 0:
+            return True
+        return False
+
+    def removeMatches(self):
+        for match in self._matches:
+            if match.isMarkedForRemoval():
+                match.remove()
 
 
 class Match:
@@ -61,6 +99,7 @@ class Match:
 
 class MatchDrawing:
     MATCH = "I"
+    MARKED = "i"
     EMPTY = " "
 
     def __init__(self, pile_type, matches):
@@ -70,10 +109,12 @@ class MatchDrawing:
         match_pile = ""
         for y in range(self._grid.get_height()):
             for x in range(self._grid.get_width()):
-                if self._grid.has_match(x, y):
-                    match_pile += MatchDrawing.MATCH
-                else:
+                if not self._grid.has_match(x, y):
                     match_pile += MatchDrawing.EMPTY
+                elif self._grid.hasMarkedMatch(x, y):
+                    match_pile += MatchDrawing.MARKED
+                else:
+                    match_pile += MatchDrawing.MATCH
             match_pile += "\n"
 
         return match_pile
@@ -119,6 +160,15 @@ class MatchGrid:
     def _connect_matches_to_grid(self, matches, coordinates):
         for match, coordinate in zip(matches, coordinates):
             self._grid[coordinate] = match
+
+    def hasMarkedMatch(self, x, y):
+        hasMarkedMatch = False
+        match = self._grid[(x, y)]
+        if isinstance(match, Match):
+            if match.isMarkedForRemoval():
+                hasMarkedMatch = True
+
+        return hasMarkedMatch
 
 
 class GridCoordinates:
@@ -193,7 +243,7 @@ class Triangle(GridCoordinates):
         return matches_in_last_row - matches_in_row + 2 * column
 
     def _get_width(self, matches_in_last_row):
-        return 2*matches_in_last_row - 1
+        return 2 * matches_in_last_row - 1
 
 
 class Square(GridCoordinates):
@@ -230,7 +280,7 @@ class Square(GridCoordinates):
 
     def _calculate_x_coordinate(self, column, matches_in_row,
                                 matches_in_last_row):
-        return 2*column
+        return 2 * column
 
     def _get_width(self, matches_in_last_row):
-        return 2*matches_in_last_row - 1
+        return 2 * matches_in_last_row - 1
